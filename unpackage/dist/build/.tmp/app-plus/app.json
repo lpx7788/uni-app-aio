@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "聚点商城",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#8a8396",
+    "selectedColor": "#2a4c7e",
+    "borderStyle": "black",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/common_tab_icon_home_normal@2x",
+        "selectedIconPath": "static/common_tab_icon_home_p@2x.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/market/index",
+        "iconPath": "static/market.png",
+        "selectedIconPath": "static/market-active.png",
+        "text": "行情"
+      },
+      {
+        "pagePath": "pages/workbench/index",
+        "iconPath": "static/common_tab_icon_work_normal@2x.png",
+        "selectedIconPath": "static/common_tab_icon_work_p@2x.png",
+        "text": "工作台"
+      },
+      {
+        "pagePath": "pages/information/index",
+        "iconPath": "static/common_tab_icon_information_n@2x.png",
+        "selectedIconPath": "static/common_tab_icon_information_p@2x.png",
+        "text": "资讯"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "iconPath": "static/common_tab_icon_me_normal@2x.png",
+        "selectedIconPath": "static/common_tab_icon_me_p@2x.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "nvueCompiler": "uni-app",
+  "renderer": "auto",
+  "splashscreen": {
+    "alwaysShowBeforeRender": true,
+    "autoclose": false
+  },
+  "appname": "uni-app-test-mini",
+  "compilerVersion": "2.4.6",
+  "usingComponents": {}
+}
