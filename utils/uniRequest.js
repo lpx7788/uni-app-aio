@@ -4,6 +4,7 @@ import config from './config.js'
 uniRequest.defaults.baseURL = config.ApiUrl;
 uniRequest.defaults.headers.common['Authorization'] = '';
 uniRequest.defaults.headers.post['Content-Type'] = 'application/json';
+
 // 请求拦截
 uniRequest.interceptors.request.use(
     request => {

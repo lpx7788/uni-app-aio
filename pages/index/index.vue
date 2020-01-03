@@ -34,10 +34,6 @@ export default {
 	},
 	data() {
 		return {
-			title: 'Hello',
-			extra: '教育科技公司',
-			note: '',
-			isFull: true,
 		    indicatorDots: false,
 			autoplay: true,
 			interval: 2000,
@@ -46,8 +42,6 @@ export default {
 			tabItems: ['自选','现货商城','求购大厅'],
 			current: 0,
 			swiperInfo: [],
-			current: 0,
-			mode: 'round'
 		};
 	},
 	onLoad() {
@@ -82,9 +76,6 @@ export default {
 	flex-direction: column;
 	align-tabItems: center;
 	justify-content: center;
-    .test{
-		color: $uni-text-color-disable;
-	}
 	.swiperWrap {
 		width: 100%;
 		height: 100%;
@@ -98,10 +89,7 @@ export default {
 		width: 100%;
 		height: 100%;
 	}
-	.testSass {
-		margin: 20px;
-		color: red;
-	}
+ 
 }
 
 </style>
