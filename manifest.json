@@ -1,5 +1,5 @@
 {
-    "name" : "uni-app-test-mini",
+    "name" : "聚点商城",
     "appid" : "__UNI__E60115E",
     "description" : "",
     "versionName" : "1.0.0",
@@ -49,7 +49,22 @@
             /* ios打包配置 */
             "ios" : {},
             /* SDK配置 */
-            "sdkConfigs" : {}
+            "sdkConfigs" : {},
+            "splashscreen" : {
+                "android" : {
+                    "hdpi" : "static/yingdaoye_480_960.png",
+                    "xhdpi" : "static/yingdaoye_720_1280.png",
+                    "xxhdpi" : "static/yingdaoye_1080_1920.png"
+                }
+            },
+            "icons" : {
+                "android" : {
+                    "hdpi" : "static/logo72.png",
+                    "xhdpi" : "static/logo96.png",
+                    "xxhdpi" : "static/logo144.png",
+                    "xxxhdpi" : "static/logo192.png"
+                }
+            }
         }
     },
     /* 快应用特有相关 */
