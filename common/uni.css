@@ -16,6 +16,12 @@ progress, checkbox-group{
 form {
 	width: 100%;
 }
+.inline{
+	display: inline;
+}
+.inline-b{
+	display: inline-block;
+}
 .uni-flex {
 	display: flex;
 	flex-direction: row;
