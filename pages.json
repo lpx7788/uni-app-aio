@@ -11,13 +11,38 @@
 			"style": {
 				"navigationBarTitleText": "socket"
 			}
+		},
+		{
+			"path": "pages/information/index",
+			"style": {
+				"navigationBarTitleText": "资讯"
+			}
+		},
+		{
+			"path": "pages/market/index",
+			"style": {
+				"navigationBarTitleText": "行情" 
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/workbench/index",
+			"style": {
+				"navigationBarTitleText": "工作台"
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "聚点商城",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"enablePullDownRefresh": true
 	},
 	
 	"tabBar" : {
@@ -28,7 +53,7 @@
 		"list" : [
 			{
 				"pagePath" : "pages/index/index",
-				"iconPath" : "static/common_tab_icon_home_normal@2x",
+				"iconPath" : "static/common_tab_icon_home_normal@2x.png",
 				"selectedIconPath" : "static/common_tab_icon_home_p@2x.png",
 				"text" : "首页"
 			},
@@ -64,5 +89,4 @@
 			}
 		]
 	}
- 
 }

@@ -4,59 +4,68 @@
 			 <swiper class="swiper" style="width: 100%;" :indicator-dots="indicatorDots" :circular="circular" :autoplay="autoplay"  :interval="interval" :duration="duration">
 				<swiper-item v-for="(item, index) in swiperInfo" :key="index" >
 					<view class="swiper-item"  >
-						<image :src='item.imgUrl' class="swiper-img"></image>
+						<image :src='item.coverPicUrl' class="swiper-img"></image>
 					</view>
 				</swiper-item>
 			</swiper>
+			<view class="tab-control " style="margin:10px">
+				<uni-segmented-control :current="current" :values="tabItems" @clickItem="onClickTabItem" style-type="button" active-color="rgb(0, 122, 255)"></uni-segmented-control>
+			    <view class="tab-content">
+					<view v-show="current === 0">
+						选项卡1的内容
+					</view>
+					<view v-show="current === 1">
+						选项卡2的内容
+					</view>
+					<view v-show="current === 2">
+						选项卡3的内容
+					</view>
+				</view>
+			</view>
 		</view>
-	 
 	</view>
 </template>
 
 <script>
-import { uniCard, uniSwiperDot, uniPagination, uniIcons, uniPopup } from '@dcloudio/uni-ui';
+import { uniSegmentedControl } from '@dcloudio/uni-ui';
 export default {
 	components: {
-		uniCard,
-		uniPagination,
-		uniIcons,
-		uniPopup,
-		uniSwiperDot
+		uniSegmentedControl
 	},
 	data() {
 		return {
-			title: 'Hello',
-			extra: '教育科技公司',
-			note: '',
-			isFull: true,
 		    indicatorDots: false,
 			autoplay: true,
 			interval: 2000,
 			duration: 500,
 			circular: true,
-			swiperInfo: [
-				{
-					imgUrl: 'http://120.79.251.137:8082/previewADCoverPic/edc0c57ba56043f7a72cf550954752df.png'
-				},
-				{
-					imgUrl: 'https://adminapi.manytrader.net/previewADCoverPic/4f58ff4fbacd4761b58b7089b6624189.png'
-				}
-			],
+			tabItems: ['自选','现货商城','求购大厅'],
 			current: 0,
-			mode: 'round'
+			swiperInfo: [],
 		};
 	},
-	onLoad() {},
+	onLoad() {
+       this.getBannerDatas()
+	},
+	
 	methods: {
-		open() {
-			this.$refs.popup.open();
+		//获取轮播图的数据
+		getBannerDatas(){
+			let self = this;
+			this.$uniRequest.post(this.$api.banner_list_url, {
+			     type: 1
+			}).then(function(res) {
+				self.swiperInfo = res.data.returnObject
+			}).catch(function(error) {
+			    // console.log(error);
+			});
 		},
-		change(e) {
-			this.current = e.detail.current;
+		//tab点击切换
+		onClickTabItem(e) {
+			if (this.current !== e.currentIndex) {
+				this.current = e.currentIndex;
+			}
 		},
-		clickBtn(){
-			console.log(324234234);
-		}
 	}
 };
 </script>
@@ -65,7 +74,7 @@ export default {
 .indexPage {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-tabItems: center;
 	justify-content: center;
 	.swiperWrap {
 		width: 100%;
@@ -80,28 +89,7 @@ export default {
 		width: 100%;
 		height: 100%;
 	}
-	.testSass {
-		margin: 20px;
-		color: red;
-	}
+ 
 }
 
-.logo {
-	height: 200rpx;
-	width: 200rpx;
-	margin-top: 200rpx;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 50rpx;
-}
-
-.text-area {
-	display: flex;
-	justify-content: center;
-}
-
-.title {
-	font-size: 36rpx;
-	color: #8f8f94;
-}
 </style>
