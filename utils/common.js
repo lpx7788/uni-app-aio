@@ -13,7 +13,7 @@ common.remove = (arr, val) => {
 // non - empty
 common.checketEmpty=(str, notice)=>{
   if (!str) {
-    wx.showToast({
+   uni.showToast({
       title: notice,
       icon: 'none',
       duration: 1000
@@ -26,8 +26,8 @@ common.checketEmpty=(str, notice)=>{
 common.checketPhone = (str, notice) => {
   const reg = (/^1(3|4|5|7|8)\d{9}$/.test(str))
   if (reg==false){
-    wx.showToast({
-      title: '请输入正确的11位手机号码！',
+   uni.showToast({
+      title: notice,
       icon: 'none',
       duration: 1000
     })
@@ -35,9 +35,10 @@ common.checketPhone = (str, notice) => {
   }
 }
 
-common.userPassword = (str, type) => {
+common.userPassword = (str) => {
+	console.log(str.length < 6)
   if (str.length < 6) {
-    wx.showToast({
+   uni.showToast({
       title: '密码至少6位！',
       icon: 'none',
       duration: 1000
