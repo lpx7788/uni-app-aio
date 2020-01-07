@@ -77,7 +77,7 @@
 			getProducts(idx){
 				this.loadMoreText = '加载'
 				this.loadMore[idx] = 'loading'
-				let url = idx===0?'customizeProduct_list_url':'product_list_url'
+				let url = idx===0?'product_userSelection_url':'product_search_url'
 				this.$uniRequest.post(this.$api[url], {
 					deliveryType: idx,
 					// categoryCode: "",

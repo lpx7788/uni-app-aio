@@ -13,16 +13,7 @@
 				"navigationBarTitleText": "聚点商城",
 				"app-plus": {  
 					"titleNView": false //禁用原生导航栏  
-				}  
-			}
-		},
-		{
-			"path": "pages/socket/index",
-			"style": {
-				"navigationBarTitleText": "socket",
-				"app-plus": {
-					"titleNView": false //禁用原生导航栏  
-				}  
+				}
 			}
 		},
 		{
@@ -93,12 +84,6 @@
 				"iconPath" : "static/common_tab_icon_me_normal@2x.png",
 				"selectedIconPath" : "static/common_tab_icon_me_p@2x.png",
 				"text" : "我的"
-			},
-			{
-				"pagePath" : "pages/socket/index",
-				"iconPath" : "static/common_tab_icon_me_normal@2x.png",
-				"selectedIconPath" : "static/common_tab_icon_me_p@2x.png",
-				"text" : "sk"
 			}
 		]
 	}
