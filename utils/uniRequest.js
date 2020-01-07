@@ -9,7 +9,6 @@ uniRequest.defaults.headers.access_token = '92587a2bfe824c0381889ae55a704fcb_763
 // 请求拦截
 uniRequest.interceptors.request.use(
     request => {
-        //配置基本信息    
         return request;
     },
     err => {
@@ -19,8 +18,14 @@ uniRequest.interceptors.request.use(
 
 // 响应拦截
 uniRequest.interceptors.response.use(function(response) {
-    // console.log('返回进入拦截成功')
-    return Promise.resolve(response);
+	if(response.data.errorCode==='0000'){
+		return Promise.resolve(response);
+	}else{
+		uni.showToast({
+			title: response.data.errorMsg,
+			icon:'none',
+		});
+	}
 }, function(error) {
     // console.log('返回进入拦截失败')
     return Promise.reject(error);

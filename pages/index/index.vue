@@ -12,7 +12,7 @@
 				<uni-segmented-control :current="current" :values="tabItems" @clickItem="onClickTabItem" style-type="button" active-color="rgb(0, 122, 255)"></uni-segmented-control>
 			    <view class="tab-content">
 					<view v-show="current === 0">
-						选项卡1的内容
+						选项卡16666
 					</view>
 					<view v-show="current === 1">
 						选项卡2的内容
@@ -21,8 +21,6 @@
 						选项卡3的内容
 					</view>
 				</view>
-				
-				
 			</view>
 		</view>
 	</view>
