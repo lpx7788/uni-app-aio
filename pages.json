@@ -1,22 +1,18 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "聚点商城",
+				"app-plus": {  
+					"titleNView": false //禁用原生导航栏  
+				}
+			}
+		},
 		{
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "登录"
-			}
-		},
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "聚点商城"
-			}
-		},
-		{
-			"path": "pages/socket/index",
-			"style": {
-				"navigationBarTitleText": "socket"
 			}
 		},
 		{
@@ -41,6 +37,24 @@
 			"path": "pages/workbench/index",
 			"style": {
 				"navigationBarTitleText": "工作台"
+			}
+		},
+		{
+			"path": "pages/mine/webview/index",
+			"style": {
+				"navigationBarTitleText": "webview"
+			}
+		},
+		{
+			"path": "pages/mine/set/index",
+			"style": {
+				"navigationBarTitleText": "设置"
+			}
+		},
+		{
+			"path": "pages/mine/integral/index",
+			"style": {
+				"navigationBarTitleText": "积分商城"
 			}
 		}
 	],
@@ -87,12 +101,6 @@
 				"iconPath" : "static/common_tab_icon_me_normal@2x.png",
 				"selectedIconPath" : "static/common_tab_icon_me_p@2x.png",
 				"text" : "我的"
-			},
-			{
-				"pagePath" : "pages/socket/index",
-				"iconPath" : "static/common_tab_icon_me_normal@2x.png",
-				"selectedIconPath" : "static/common_tab_icon_me_p@2x.png",
-				"text" : "sk"
 			}
 		]
 	}
