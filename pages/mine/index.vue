@@ -97,6 +97,9 @@ export default {
 </script>
 
 <style lang="scss">
+	page{
+		background: #EEEEEE;
+	}
 .minePage {
 	
 	 .head-section {

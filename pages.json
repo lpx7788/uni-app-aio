@@ -10,19 +10,13 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "聚点商城",
-				"app-plus": {  
-					"titleNView": false //禁用原生导航栏  
-				}  
+				"navigationBarTitleText": "聚点商城"
 			}
 		},
 		{
 			"path": "pages/socket/index",
 			"style": {
-				"navigationBarTitleText": "socket",
-				"app-plus": {
-					"titleNView": false //禁用原生导航栏  
-				}  
+				"navigationBarTitleText": "socket"
 			}
 		},
 		{
@@ -53,7 +47,7 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "聚点商城",
-		"navigationBarBackgroundColor": "#fff",
+		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"enablePullDownRefresh": true
 	},
