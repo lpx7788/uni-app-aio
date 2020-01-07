@@ -1,19 +1,19 @@
 <template>
 	<view class="products">
-		<image src="../../static/logo144.png" mode=""></image>
-		<navTab ref="navTab" :tabTitle="tabTitle" @changeTab='changeTab'></navTab>
+		<image src="../../static/logo144.png" mode="" style="height: 150px;"></image>
+		<navTab ref="navTab" :tabTitle="tabTitle" @changeTab='changeTab' ></navTab>
 		<swiper style="min-height: 100vh;" :current="currentTab" @change="swiperTab">
 			<swiper-item v-for="(tabItem,tabIndex) in tabTitle" :key="tabIndex">
-				<scroll-view style="height: 100%;"  scroll-with-animation @scrolltolower="scrolltolower">
+				<scroll-view style="height: 100%;" :scroll-y="scrollY" scroll-with-animation @scrolltolower="scrolltolower">
 					<view class="" >
 						<view v-for="(item,index) in products[tabIndex]" :key="index" class="products-item uni-flex">
 							<view class="icons uni-flex uni-column">
 								<text v-if="item.deliveryType==='1'" class="blue-b">售</text>
-								<text v-if="item.deliveryType==='2'">购</text>
+								<text v-if="item.deliveryType==='2'" class="brown-b">购</text>
 								<text v-if="item.sign==='1'" class="blue-b">供</text>
-								<text v-if="item.sign==='3'">客</text>
-								<text v-if="item.isPresentIntegral==='1'">赠</text>
-								<text v-if="item.carefullyChosenSeller==='1'" class="red-b">精</text>
+								<text v-if="item.sign==='3'" class="brown-b">客</text>
+								<text v-if="item.isPresentIntegral==='1'" class="red-b">赠</text>
+								<text v-if="item.carefullyChosenSeller==='1'" class="green-b">精</text>
 							</view> 
 							<view class="contents uni-flex-item">
 								<view class="top">
@@ -39,7 +39,10 @@
 								</view>
 							</view>
 						</view>
-						<uniLoadMore :status="loadMore"></uniLoadMore>
+						<uniLoadMore :status="loadMore[tabIndex]"></uniLoadMore>
+						<view class="none">
+							{{loadMoreText}}
+						</view>
 					</view>
 				</scroll-view>
 			</swiper-item>
@@ -58,12 +61,12 @@
 				products: [[],[],[]], //商品
 				contractCodes: [], //页面所有合约
 				instrumentIdList: {}, //各合约对应最新价
-				socket1: null, 
-				socket2: null, 
-				loadMore: 'more',
+				loadMore: ['more','more','more'],
 				pages: [1,1,1],
 				currentTab: 0,
-				tabTitle: ['自选','现货商城','求购大厅']
+				tabTitle: ['自选','现货商城','求购大厅'],
+				scrollY: false,
+				loadMoreText: '上拉'
 			}
 		},
 		components: {
@@ -71,95 +74,60 @@
 			navTab
 		},
 		methods:{
-			setSocket(){
-				this.socket1 = uni.connectSocket({
-					// url: 'wss://aio.manytrader.net/webSk/md?userCode=92587a2bfe824c0381889ae55a704fcb',
-					url: 'ws://192.168.0.230:8080/webSk/md?userCode=92587a2bfe824c0381889ae55a704fcb',
-					complete: ()=> {}
-				});
-				this.socket1.onOpen(()=>{
-					// console.log('open')
-				})
-				this.socket1.onMessage((data)=>{
-					let res = JSON.parse(data.data)
-					// ****** instrumentIdList需要先清空再赋值才能渲染成功 ****** start
-					let instrumentIdList = this.instrumentIdList
-					this.instrumentIdList = {}
-					this.instrumentIdList = instrumentIdList
-					// ****** instrumentIdList需要先清空再赋值才能渲染成功 ****** end
-					// 有新合约或最新价有变动时才更新instrumentIdList
-					if(this.instrumentIdList.hasOwnProperty(res.instrumentId)||this.instrumentIdList[res.instrumentId]!==res.lastPrice){
-						let instrumentId = res.instrumentId.toUpperCase()
-						this.instrumentIdList[instrumentId] = res.lastPrice
-					}
-				}) 
-				
-				this.socket2 = uni.connectSocket({
-					url: 'ws://192.168.0.230:8080/webSk/service',
-					complete: ()=> {}
-				});
-				this.socket2.onOpen(()=>{
-					this.socket2.send({
-						data: JSON.stringify({"action":"getInfoCount","access_token":"92587a2bfe824c0381889ae55a704fcb_763d00032f204df0990354e582d55b56"})
-					})
-				}) 
-				this.socket2.onMessage((data)=>{
-					// console.log(data.data)
-				})
-			},
 			getProducts(idx){
-				let path = idx===0?'queryUserSelection':'search'
-				uni.request({
-					method: 'post',
-				    url: 'http://192.168.0.230:8080/v1.2/product/' + path, 
-				    data: {
-				        deliveryType: idx,
-						categoryCode: "",
-						searchKeyword: "",
-						source: "1",
-						pageNum: this.pages[idx],
-						pageSize: "30",
-						releaseStatus: ["1", "2"],
-						sortType: "1",
-						materialList: [],
-						brandList: [],
-						specList: [],
-						wareHouseList: [],
-						areaCode: "",
-						locationJson: {cid: "440000", cip: "120.197.17.187", cname: "广东省"},
-						categoryType: ""
-				    },
-				    header: {
-				        'Access-Control-Allow-Origin': '*',
-				        'Access-Control-Expose-Headers': 'Content-Disposition',
-				        'Content-Type': 'application/json;charset=UTF-8',
-						'access_token': '92587a2bfe824c0381889ae55a704fcb_763d00032f204df0990354e582d55b56'
-				    },
-				    success: (res) => {
-						uni.stopPullDownRefresh() //停止下拉刷新
-						// alert('66666')
+				this.loadMoreText = '加载'
+				this.loadMore[idx] = 'loading'
+				let url = idx===0?'customizeProduct_list_url':'product_list_url'
+				this.$uniRequest.post(this.$api[url], {
+					deliveryType: idx,
+					// categoryCode: "",
+					// searchKeyword: "",
+					// source: "1",
+					pageNum: this.pages[idx],
+					pageSize: "20",
+					// releaseStatus: ["1", "2"],
+					// sortType: "1",
+					// materialList: [],
+					// brandList: [],
+					// specList: [],
+					// wareHouseList: [],
+					// areaCode: "",
+					// locationJson: {cip: "120.197.17.187", cid: "440000", cname: "广东省"},
+					// categoryType: ""
+				}).then((res)=>{
+					uni.stopPullDownRefresh() //停止下拉刷新
+					this.products[idx] = this.products[idx].concat(res.data.returnObject.products)
+					if(this.products[idx].length>=res.data.returnObject.total){
+						this.loadMore[idx] = 'noMore'
+						this.loadMoreText = '没有'
+					}else{
+						this.loadMoreText = '上拉'
+						this.loadMore[idx] = 'more'
 						this.pages[idx]++
-				        this.products[idx] = this.products[idx].concat(res.data.returnObject.products)
-						if(this.products[idx].length===res.data.returnObject.total) this.loadMore = 'noMore';this.pages[idx]--
-						let contractCodes = this.products[idx].map(item => item.contractCode)
-						this.contractCodes = uniq(contractCodes)
-						// this.socket1.onOpen(function(){
-						// 	console.log('open')
-							this.socket1.send({
-								data: JSON.stringify({"instuementIds":this.contractCodes})
-							})
-						// }) 
-				    } 
+					}
+					let contractCodes = this.products[idx].map(item => item.contractCode)
+					this.contractCodes = uniq(this.contractCodes.concat(contractCodes))
+					// this.socket1.onOpen(function(){
+					uni.$emit('socket_md',{
+						data: JSON.stringify({"instuementIds":this.contractCodes})
+					})
+						// this.socket1.send({
+						// 	data: JSON.stringify({"instuementIds":this.contractCodes})
+						// })
+					// }) 
+				}).catch(function(error) {
+				    // console.log(error);
 				});
 			},
 			swiperTab: function(e) {
 				var index = e.detail.current //获取索引
+				this.$refs.navTab.longClick(index,true)
 			},
 			changeTab(index){
-				this.currentTab = index;
+				this.currentTab = index
 			},
 			scrolltolower(){
-				this.loadMore = 'loading'
+				if(this.loadMore[this.currentTab] === 'noMore') return
 				this.getProducts(this.currentTab)
 			}
 		},
@@ -167,9 +135,21 @@
 			
 		},
 		mounted(){
-			this.setSocket()
 			this.products.forEach((item,idx)=>{
 				this.getProducts(idx)
+			})
+			uni.$on('socket_md_cb',(data)=>{
+				let res = data.res
+				// ****** instrumentIdList需要先清空再赋值才能渲染成功 ****** start
+				let instrumentIdList = this.instrumentIdList
+				this.instrumentIdList = {}
+				this.instrumentIdList = instrumentIdList
+				// ****** instrumentIdList需要先清空再赋值才能渲染成功 ****** end
+				// 有新合约或最新价有变动时才更新instrumentIdList
+				if(this.instrumentIdList.hasOwnProperty(res.instrumentId)||this.instrumentIdList[res.instrumentId]!==res.lastPrice){
+					let instrumentId = res.instrumentId.toUpperCase()
+					this.instrumentIdList[instrumentId] = res.lastPrice
+				}
 			})
 		},  
 		onShow(){
@@ -186,7 +166,14 @@
 					success: this.getProducts(this.currentTab)
 				});
 			},1000)
-		}
+		},
+		onPageScroll(e) {
+			if(e.scrollTop>=150){
+				this.scrollY = true
+			} else {
+				this.scrollY = false
+			}
+		},
 	}
 </script>
 
@@ -251,7 +238,6 @@
 		}
 		.navTabBox{
 			position: -webkit-sticky;
-			/* #endif */
 			position: sticky;
 			top: 0;
 			z-index: 99;
@@ -268,8 +254,14 @@
 		.blue-b{
 			background-color: #4e67fd;
 		}
+		.green-b{
+			background-color: #62b59a;
+		}
 		.gray{
 			color: rgb(102,102,102);
+		}
+		.brown-b{
+			background-color: #d3a37a;
 		}
 	}
 </style>

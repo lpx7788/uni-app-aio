@@ -10,13 +10,19 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "聚点商城"
+				"navigationBarTitleText": "聚点商城",
+				"app-plus": {  
+					"titleNView": false //禁用原生导航栏  
+				}  
 			}
 		},
 		{
 			"path": "pages/socket/index",
 			"style": {
-				"navigationBarTitleText": "socket"
+				"navigationBarTitleText": "socket",
+				"app-plus": {
+					"titleNView": false //禁用原生导航栏  
+				}  
 			}
 		},
 		{

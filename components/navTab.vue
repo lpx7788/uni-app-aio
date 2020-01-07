@@ -2,7 +2,17 @@
 	<view class="navTabBox">
 		<view class="longTab" ref="longTab">
 			<scroll-view scroll-x="true" style="white-space: nowrap; display: flex" scroll-with-animation :scroll-left="tabLeft">
-				<view class="longItem" :data-index="index" :class="index===tabClick?'click':''" :style="{color: (tabClick === index ? activeColor: ''),width: isWidth + 'px'}" v-for="(item,index) in tabTitle" :key="index" :id="'id'+index" @click="longClick(index)">{{item}}</view>
+				<view 
+				class="longItem" 
+				:data-index="index" 
+				:class="index===tabClick?'click':''" 
+				:style="{color: (tabClick === index ? activeColor: ''),width: isWidth + 'px'}" 
+				v-for="(item,index) in tabTitle" 
+				:key="index" 
+				:id="'id'+index" 
+				@click="longClick(index)">
+				{{item}}
+				</view>
 				<view class="underlineBox" :style='"transform:translateX("+isLeft+"px);width:"+isWidth+"px"'>
 					<view class="underline" :style="{backgroundColor: activeColor}"></view>
 				</view>
@@ -47,7 +57,7 @@
 		},
 		methods: {
 			// 导航栏点击
-			longClick(index){
+			longClick(index,type){
 				    if(this.tabTitle.length>5){
 						var tempIndex = index - 2;
 						tempIndex = tempIndex<=0 ? 0 : tempIndex;
@@ -55,16 +65,14 @@
 					}
 					this.tabClick = index //设置导航点击了哪一个
 					this.isLeft = index * this.isWidth //设置下划线位置
-					this.setColor()
-					this.$emit('changeTab', index);//设置swiper的第几页
+					if(!type){ //滑动swiper触发时不需要重复设置swiper
+						this.$emit('changeTab', index);//设置swiper的第几页
+					}
 					// this.$parent.currentTab = index //设置swiper的第几页
-			},
-			setColor(){
-				// this.$refs.longTab.$el.getElementsByClassName('click')[0].style.color = this.activeColor
 			}
 		},
 		mounted(){
-			this.setColor()
+			
 		}
 	}
 </script>
@@ -73,6 +81,7 @@
 	.navTabBox {
 		width: 100vw;
 		color: #222;
+		background-color: #fff;
 		.longTab {
 			width: 100%;
 			.longItem{ 

@@ -30,6 +30,7 @@
 
 <script>
 import { uniSegmentedControl } from '@dcloudio/uni-ui';
+	
 export default {
 	components: {
 		uniSegmentedControl
@@ -43,11 +44,11 @@ export default {
 			circular: true,
 			tabItems: ['自选','现货商城','求购大厅'],
 			current: 0,
-			swiperInfo: [],
+			swiperInfo: []
 		};
 	},
 	onLoad() {
-       this.getBannerDatas()
+		this.getBannerDatas()
 	},
 	
 	methods: {
@@ -68,6 +69,7 @@ export default {
 				this.current = e.currentIndex;
 			}
 		},
+		
 	}
 };
 </script>
