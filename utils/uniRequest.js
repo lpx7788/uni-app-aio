@@ -3,20 +3,10 @@ import uniRequest from 'uni-request';
 import config from './config.js'
 uniRequest.defaults.baseURL = config.ApiUrl;
 uniRequest.defaults.headers.post['Content-Type'] = 'application/json';
-// uniRequest.defaults.headers.common['Authorization'] = '';
-// uni.setStorageSync('access_token', '92587a2bfe824c0381889ae55a704fcb_763d00032f204df0990354e582d55b56');
-// uniRequest.defaults.headers.access_token = '92587a2bfe824c0381889ae55a704fcb_763d00032f204df0990354e582d55b56'
 
 // 请求拦截
 uniRequest.interceptors.request.use(
     request => {
-		// console.log(request)
-		// let token = uni.getStorageSync('access_token')
-		// console.log(uniRequest.defaults.headers)
-		// uniRequest.defaults.headers.access_token = token
-		// uniRequest.defaults.headers.common['Authorization'] = '';
-		// uniRequest.defaults.headers.common['access_token'] = token
-		// return Promise.resolve(res); 
         return request; 
     },
     err => {
