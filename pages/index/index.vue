@@ -94,6 +94,7 @@ export default {
 		};
 	},
 	onLoad() {
+
 		this.getBannerDatas()
 		this.products.forEach((item,idx)=>{
 			this.getProducts(idx)
@@ -113,6 +114,7 @@ export default {
 		})
 	},
 	methods: {
+
 		addition(item){
 			
 			let num = Number(this.instrumentIdList[item.contractCode])+(item.showFloatingPrice==='Y'?Number(item.floatingPrice):0)

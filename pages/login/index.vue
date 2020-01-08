@@ -64,12 +64,16 @@ export default {
 					uni.showToast({
 						title: '登录成功',
 					});
+					let token = res.data.returnObject.access_token
 					//存儲信息
 					uni.setStorageSync('userInfo', res.data.returnObject);
+					uni.setStorageSync('token', token);
                     //跳转首页
-					uni.reLaunch({
-						url: '/pages/index/index',
-					})
+			       
+					uni.switchTab({
+						  url:  '/pages/index/index',
+					});
+	
 				}
 			}).catch(function(error) {
 			    // console.log(error);
