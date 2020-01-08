@@ -13,7 +13,7 @@
 				@click="longClick(index)">
 				{{item}}
 				</view>
-				<view class="underlineBox" :style='"transform:translateX("+isLeft+"px);width:"+isWidth+"px"'>
+				<view v-if="showUnderline" class="underlineBox" :style='"transform:translateX("+isLeft+"px);width:"+isWidth+"px"'>
 					<view class="underline" :style="{backgroundColor: activeColor}"></view>
 				</view>
 			</scroll-view>
@@ -32,6 +32,14 @@
 			activeColor: {
 				type: String,
 				default: '#4e67fd'
+			},
+			unActiveColor: {
+				type: String,
+				default: '#222'
+			},
+			showUnderline: {
+				type: Boolean,
+				default: true
 			}
 		},
 		data() {

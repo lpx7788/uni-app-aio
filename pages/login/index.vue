@@ -66,6 +66,8 @@ export default {
 					});
 					//存儲信息
 					uni.setStorageSync('userInfo', res.data.returnObject);
+					console.log(res.data.returnObject.access_token)
+					uni.setStorageSync('access_token', res.data.returnObject.access_token);
                     //跳转首页
 					uni.reLaunch({
 						url: '/pages/index/index',
