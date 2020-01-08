@@ -2,15 +2,13 @@
 import uniRequest from 'uni-request';
 import config from './config.js'
 uniRequest.defaults.baseURL = config.ApiUrl;
-uniRequest.defaults.headers.post['Content-Type'] = 'application/json';
 
 // 请求拦截
 uniRequest.interceptors.request.use(
-    request => {
+    request => { 
         return request; 
     },
     err => {
-        // console.log('请求失败');
         return Promise.reject(err);
     });
 
@@ -25,7 +23,6 @@ uniRequest.interceptors.response.use(function(response) {
 		});
 	}
 }, function(error) {
-    // console.log('返回进入拦截失败')
     return Promise.reject(error);
 });
 

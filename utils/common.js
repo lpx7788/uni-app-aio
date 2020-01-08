@@ -36,7 +36,6 @@ common.checketPhone = (str, notice) => {
 }
 
 common.userPassword = (str) => {
-	console.log(str.length < 6)
   if (str.length < 6) {
    uni.showToast({
       title: '密码至少6位！',

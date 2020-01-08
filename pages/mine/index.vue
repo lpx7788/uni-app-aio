@@ -1,9 +1,9 @@
 <template>
 	<view class="minePage">
-	     <view class='section head-section' bindtap='loginBtn'>
+	     <view class='section head-section' @click='loginBtn()'>
 	        <view class="head-section-content">
 	          <view class="head-section-content-top">
-	           <view class="userName" v-if="userList==''||JSON.stringify(userList)=='{}'||userList.token==''" >
+	           <view class="userName" v-if="userList==''||JSON.stringify(userList)=='{}'" >
 	              <view> 未登录</view>
 	              <view class="tologin">
 	                立即登录，进行交易！
@@ -87,20 +87,30 @@ export default {
 		this.getUserInfo()
 	},
 	methods: {
+		//跳转详情页面
 		gotoDetail(url){
 			uni.navigateTo({
 			    url: url
 			});
 		},
 		
+		//跳转webview页面
 		gotoWebView(url){
 			uni.navigateTo({
-				url:url + '?url='+ config.ApiUrl  + '/xszy/index.html'
+		     	url:url + '?url='+ config.ApiUrl  + '/xszy/index.html'
 			});	
+		},
+		
+		//跳转登录页面
+		loginBtn(){
+			uni.navigateTo({
+			   url: '/pages/login/index',
+			}) 
 		},
 			
        //获取用户信息
 	   getUserInfo(){
+		   
 		   // let datas = {"errorCode":"0000","errorMsg":"请求成功","returnObject":
 		   // {"access_token":"d9748d0e8abb496dac514df52a86b0aa_763d00032f204df0990354e582d55b56","user":{"qq":null,"unionid":null,"auths":
 		   // {"companyCode":"763d00032f204df0990354e582d55b56","userCompanyStatus":"2","companyIdentity":"3",
@@ -109,8 +119,10 @@ export default {
 		   // "userName":"王老板","isBuyer":"1","allowPricing":"1","userCode":"d9748d0e8abb496dac514df52a86b0aa","userWechat":null,
 		   // "openNewsPopup":null,"availableIntegral":"20000","aboutToIntegral":"30000","businessDirection":"3","beenusedIntegral":"0","userEmail":null,"id":2640,"status":"2"}},
 		   // "type":null,"requestId":null}
+		   console.log('获取用户信息 ====')
 		  let self = this
-		   this.$uniRequest.post(this.$api.user_refresh_url, {}).then(function(res) {
+		   this.$uniRequest.httpClient(this.$api.user_refresh_url, {}).then(function(res) {
+			   console.log(res);
 			   self.userList = res.data.returnObject
 			   if(self.userList.user){
 				  if(self.userList.user.status){
@@ -129,9 +141,9 @@ export default {
 </script>
 
 <style lang="scss">
-	page{
-		background: #EEEEEE;
-	}
+page{
+	background: #EEEEEE;
+}
 .minePage {
 	
 	 .head-section {

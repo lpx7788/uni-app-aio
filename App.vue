@@ -2,6 +2,7 @@
 	import config from './utils/config.js'
 	
 	export default {
+
 		data(){
 			return{
 				socket1: null,
@@ -59,4 +60,5 @@
 <style>
 	/*每个页面公共css */
     @import "./common/uni.css";
+    @import "./common/base.css";
 </style>

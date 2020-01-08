@@ -79,7 +79,7 @@
 import { uniSegmentedControl,uniLoadMore } from '@dcloudio/uni-ui';
 import uniq from "lodash/uniq";
 import navTab from '../../components/navTab.vue'
-import http from '../../utils/http.js'
+
 	
 export default {
 	components: {
@@ -111,6 +111,7 @@ export default {
 		};
 	},
 	onLoad() {
+
 		this.getHotCategory()
 		this.getBannerDatas()
 		this.products.forEach((item,idx)=>{
@@ -131,13 +132,14 @@ export default {
 		})
 	},
 	methods: {
+
 		// 选择热门品种
 		changeHotCategory(item){
 			
 		},
 		// 获取热门品种
 		getHotCategory(){
-			this.$uniRequest.post(this.$api.getHotCategory_url, {
+			this.$uniRequest.httpClient(this.$api.getHotCategory_url, {
 			    
 			}).then((res)=>{
 				this.hotCategoryNames = res.data.returnObject
@@ -163,7 +165,7 @@ export default {
 		//获取轮播图的数据
 		getBannerDatas(){
 			let self = this;
-			this.$uniRequest.post(this.$api.banner_list_url, {
+			this.$uniRequest.httpClient(this.$api.banner_list_url, {
 			     type: 1
 			}).then(function(res) {
 				self.swiperInfo = res.data.returnObject
@@ -183,8 +185,8 @@ export default {
 			let sortType = this.sortType[idx] + 1
 			let url = idx===0?'product_userSelection_url':'product_search_url'
 			// this.$uniRequest.post(this.$api[url], {
-			// console.log(http.requestPost)
-			http.requestPost(this.$api[url],{
+			// console.log(http.httpClientPost)
+			this.$uniRequest.httpClient(this.$api[url],{
 				deliveryType: idx,
 				// categoryCode: "",
 				// searchKeyword: "",
