@@ -55,7 +55,7 @@ export default {
 			}else if(common.userPassword(self.passwordInputValue)===false){
 				return 
 			}
-			this.$uniRequest.post(this.$api.user_login, {
+			this.$uniRequest.httpClient(this.$api.user_login, {
 			     userPhone: self.phoneInputValue,
 			     userPassword:self.passwordInputValue,
 				 equipmentNo:"43846ad34489y4j4u8f8vcj1"
@@ -64,12 +64,11 @@ export default {
 					uni.showToast({
 						title: '登录成功',
 					});
-					let token = res.data.returnObject.access_token
 					//存儲信息
 					uni.setStorageSync('userInfo', res.data.returnObject);
-					uni.setStorageSync('token', token);
+					uni.setStorageSync('access_token', res.data.returnObject.access_token);
+
                     //跳转首页
-			       
 					uni.switchTab({
 						  url:  '/pages/index/index',
 					});

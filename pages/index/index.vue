@@ -3,12 +3,25 @@
 		<view class="text-area swiperWrap">
 			 <swiper class="swiper" style="width: 100%;" :indicator-dots="indicatorDots" :circular="circular" :autoplay="autoplay"  :interval="interval" :duration="duration">
 				<swiper-item v-for="(item, index) in swiperInfo" :key="index" >
-					<view class="swiper-item" :style="{background:`url(${item.coverPicUrl}) center / cover no-repeat`,backgroundPosition: 'center' }" >
+					<view class="swiper-item" :style="'background: url('+ item.coverPicUrl + ') center center / cover no-repeat'" >
+						<!-- <image :src='item.coverPicUrl' class="swiper-img"></image> -->
 					</view>
 				</swiper-item>
 			</swiper>
-			<navTab ref="navTab" :tabTitle="tabTitle" @changeTab='changeTab' ></navTab>
-
+			<view class="stickyBox">				
+				<navTab ref="navTab" class="navTab" :tabTitle="tabTitle" @changeTab='changeTab' ></navTab>
+				<view class="hotCategory uni-flex">
+					<view class="title">
+						热门品种：
+					</view>
+					<view class="categoryNames">
+						<scroll-view :scroll-x="true">
+							<text v-for="(item,idx) in hotCategoryNames" :key="idx" @click="changeHotCategory(item)">{{item.categoryName}}</text>
+						</scroll-view>
+					</view>
+				</view>
+				<navTab ref="navTab_filter" class="navTab" :tabTitle="tabTitle_filter" @changeTab='changeTab_filter' :showUnderline="false"></navTab>
+			</view>
 			<swiper style="min-height: 100vh;" :current="currentTab" @change="swiperTab">
 				<swiper-item v-for="(tabItem,tabIndex) in tabTitle" :key="tabIndex">
 					<scroll-view style="height: 100%;" :scroll-y="scrollY" scroll-with-animation @scrolltolower="scrolltolower">
@@ -33,12 +46,12 @@
 									</view>
 									<view class="middle uni-flex">
 										<text class="uni-column uni-flex-item">{{item.stockNum===-1?'不限':item.stockNum+'吨'}}</text>
-										<text class="contractName uni-flex-item">{{item.contractName}}+{{item.floatingPrice}}</text>
+										<text v-if="item.priceType==='1'" class="contractName uni-flex-item">{{item.contractName}}+{{item.floatingPrice}}</text>
 										<view class="price uni-flex-item" :class="[item.releaseStatus==='1'?'red':'gray']">						
 											<text v-if="item.priceType==='1'">
 												<text class="price-icon">¥</text> 
+												<!-- {{Number(instrumentIdList[item.contractCode])+(item.showFloatingPrice==='Y'?Number(item.floatingPrice):0)}} -->
 												{{addition(item)}}
-												
 											</text>
 											<text v-else>{{item.basePrice}}</text>
 										</view>
@@ -66,6 +79,7 @@
 import { uniSegmentedControl,uniLoadMore } from '@dcloudio/uni-ui';
 import uniq from "lodash/uniq";
 import navTab from '../../components/navTab.vue'
+
 	
 export default {
 	components: {
@@ -89,12 +103,16 @@ export default {
 			pages: [1,1,1],
 			currentTab: 0,
 			tabTitle: ['自选','现货商城','求购大厅'],
+			tabTitle_filter: ['智能排序','价格优先','数量优先'],
+			hotCategoryNames: [],
 			scrollY: false,
 			loadMoreText: '上拉',
+			sortType: [0,0,0],
 		};
 	},
 	onLoad() {
 
+		this.getHotCategory()
 		this.getBannerDatas()
 		this.products.forEach((item,idx)=>{
 			this.getProducts(idx)
@@ -115,17 +133,39 @@ export default {
 	},
 	methods: {
 
-		addition(item){
+		// 选择热门品种
+		changeHotCategory(item){
 			
-			let num = Number(this.instrumentIdList[item.contractCode])+(item.showFloatingPrice==='Y'?Number(item.floatingPrice):0)
-			// console.log(this.instrumentIdList)
-			// console.log(num)
-			return num
+		},
+		// 获取热门品种
+		getHotCategory(){
+			this.$uniRequest.httpClient(this.$api.getHotCategory_url, {
+			    
+			}).then((res)=>{
+				this.hotCategoryNames = res.data.returnObject
+			}).catch(function(error) {
+			    // console.log(error);
+			});
+		},
+		// 重置商品数据
+		reset(idx){
+			this.pages[idx] = 1
+			this.loadMore[idx] = 'more'
+			this.products[idx] = []
+		},
+		changeTab_filter(e){
+			this.sortType[this.currentTab] = e
+			this.reset(this.currentTab)
+			this.getProducts(this.currentTab)
+		},
+		//计算商品价格
+		addition(item){ 
+			return Number(this.instrumentIdList[item.contractCode])+(item.showFloatingPrice==='Y'?Number(item.floatingPrice):0)
 		},
 		//获取轮播图的数据
 		getBannerDatas(){
 			let self = this;
-			this.$uniRequest.post(this.$api.banner_list_url, {
+			this.$uniRequest.httpClient(this.$api.banner_list_url, {
 			     type: 1
 			}).then(function(res) {
 				self.swiperInfo = res.data.returnObject
@@ -142,8 +182,11 @@ export default {
 		getProducts(idx){
 			this.loadMoreText = '加载'
 			this.loadMore[idx] = 'loading'
+			let sortType = this.sortType[idx] + 1
 			let url = idx===0?'product_userSelection_url':'product_search_url'
-			this.$uniRequest.post(this.$api[url], {
+			// this.$uniRequest.post(this.$api[url], {
+			// console.log(http.httpClientPost)
+			this.$uniRequest.httpClient(this.$api[url],{
 				deliveryType: idx,
 				// categoryCode: "",
 				// searchKeyword: "",
@@ -151,7 +194,7 @@ export default {
 				pageNum: this.pages[idx],
 				pageSize: "20",
 				// releaseStatus: ["1", "2"],
-				// sortType: "1",
+				sortType: sortType,
 				// materialList: [],
 				// brandList: [],
 				// specList: [],
@@ -172,24 +215,21 @@ export default {
 				}
 				let contractCodes = this.products[idx].map(item => item.contractCode)
 				this.contractCodes = uniq(this.contractCodes.concat(contractCodes))
-				// this.socket1.onOpen(function(){
 				uni.$emit('socket_md',{
 					data: JSON.stringify({"instuementIds":this.contractCodes})
 				})
-					// this.socket1.send({
-					// 	data: JSON.stringify({"instuementIds":this.contractCodes})
-					// })
-				// }) 
 			}).catch(function(error) {
 			    // console.log(error);
 			});
 		},
 		swiperTab: function(e) {
-			var index = e.detail.current //获取索引
+			let index = e.detail.current //获取索引
+			this.$refs.navTab_filter.longClick(this.sortType[index],true)
 			this.$refs.navTab.longClick(index,true)
 		},
 		changeTab(index){
 			this.currentTab = index
+			this.$refs.navTab_filter.longClick(this.sortType[index],true)
 		},
 		scrolltolower(){
 			if(this.loadMore[this.currentTab] === 'noMore') return
@@ -198,27 +238,22 @@ export default {
 	},
 	
 	mounted(){
-		// this.products.forEach((item,idx)=>{
-		// 	this.getProducts(idx)
-		// })
-		// uni.$on('socket_md_cb',(data)=>{
-		// 	let res = data.res
-		// 	// ****** instrumentIdList需要先清空再赋值才能渲染成功 ****** start
-		// 	let instrumentIdList = this.instrumentIdList
-		// 	this.instrumentIdList = {}
-		// 	this.instrumentIdList = instrumentIdList
-		// 	// ****** instrumentIdList需要先清空再赋值才能渲染成功 ****** end
-		// 	// 有新合约或最新价有变动时才更新instrumentIdList
-		// 	if(this.instrumentIdList.hasOwnProperty(res.instrumentId)||this.instrumentIdList[res.instrumentId]!==res.lastPrice){
-		// 		let instrumentId = res.instrumentId.toUpperCase()
-		// 		this.instrumentIdList[instrumentId] = res.lastPrice
-		// 	}
-		// })
+		
 	},  
 	onPullDownRefresh(){ //下拉
 		setTimeout(()=>{				
 			uni.startPullDownRefresh({
-				success: this.getProducts(this.currentTab)
+				success: ()=>{
+					this.products = [[],[],[]], //商品
+					this.contractCodes = [], //页面所有合约
+					this.instrumentIdList = {}, //各合约对应最新价
+					this.loadMore = ['more','more','more'],
+					this.pages = [1,1,1],
+					this.getBannerDatas()
+					this.products.forEach((item,idx)=>{
+						this.getProducts(idx)
+					})
+				}
 			});
 		},1000)
 	},
@@ -232,7 +267,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .indexPage {
 	display: flex;
 	flex-direction: column;
@@ -255,6 +290,45 @@ export default {
 }
 .products{
 		
+		.navTab::after{ //下边框
+			position: absolute;
+			box-sizing: border-box;
+			content: ' ';
+			pointer-events: none;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			border-bottom: 1px solid #ebedf0;
+			-webkit-transform: scaleY(0.5);
+			transform: scaleY(0.5);
+		}
+		.hotCategory{
+			background-color: #fff;
+			padding: 20rpx 0;
+			.title{
+				width: 25vw;
+				text-align: center;
+			}
+			.categoryNames{
+				width: 75vw;
+				white-space: nowrap;
+				text{
+					padding: 0 10rpx;
+				}
+			}
+		}
+		.hotCategory::after{ //下边框
+			position: absolute;
+			box-sizing: border-box;
+			content: ' ';
+			pointer-events: none;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			border-bottom: 1px solid #ebedf0;
+			-webkit-transform: scaleY(0.5);
+			transform: scaleY(0.5);
+		}
 		.products-item{
 			position: relative;
 			padding: 30rpx;
@@ -311,7 +385,7 @@ export default {
 				}
 			}
 		}
-		.navTabBox{
+		.stickyBox{
 			position: -webkit-sticky;
 			position: sticky;
 			top: 0;

@@ -121,7 +121,7 @@ export default {
 		   // "type":null,"requestId":null}
 		   console.log('获取用户信息 ====')
 		  let self = this
-		   this.$uniRequest.post(this.$api.user_refresh_url, {}).then(function(res) {
+		   this.$uniRequest.httpClient(this.$api.user_refresh_url, {}).then(function(res) {
 			   console.log(res);
 			   self.userList = res.data.returnObject
 			   if(self.userList.user){

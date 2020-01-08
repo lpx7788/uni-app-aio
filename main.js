@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-import uniRequest from  './utils/uniRequest.js';
+import uniRequest from  './utils/http.js';
 import api from  './utils/api.js';
 
 Vue.config.productionTip = false
