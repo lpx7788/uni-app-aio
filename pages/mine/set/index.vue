@@ -37,16 +37,10 @@
 				            uni.showLoading({
 				                title: '退出成功'
 				            });
-							uni.setStorage('userInfo', {});
-							uni.setStorage('token', '');
+							uni.setStorageSync('userInfo', {});
+							uni.setStorageSync('access_token', '');
 							uni.switchTab({
 							      url: '/pages/mine/index',
-								  // success(){
-									 // let page = getCurrentPages().pop();  //跳转页面成功之后
-									 // console.log(page);
-							   //           if (!page) return;  
-							   //           page.onLoad(); //如果页面存在，则重新刷新页面
-								  // }
 							});
 				        } else if (res.cancel) {
 				            console.log('用户点击取消');

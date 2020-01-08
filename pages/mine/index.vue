@@ -3,7 +3,7 @@
 	     <view class='section head-section' @click='loginBtn()'>
 	        <view class="head-section-content">
 	          <view class="head-section-content-top">
-	           <view class="userName" v-if="userList==''||JSON.stringify(userList)=='{}'||userList.token==''" >
+	           <view class="userName" v-if="userList==''||JSON.stringify(userList)=='{}'" >
 	              <view> 未登录</view>
 	              <view class="tologin">
 	                立即登录，进行交易！
