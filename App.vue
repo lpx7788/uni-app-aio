@@ -33,7 +33,9 @@
 				});
 				this.socket2.onOpen(()=>{
 					this.socket2.send({
-						data: JSON.stringify({"action":"getInfoCount","access_token":"92587a2bfe824c0381889ae55a704fcb_763d00032f204df0990354e582d55b56"})
+						data: JSON.stringify(
+						{"action":"getInfoCount","access_token":"92587a2bfe824c0381889ae55a704fcb_763d00032f204df0990354e582d55b56"}
+						)
 					})
 				}) 
 				this.socket2.onMessage((data)=>{

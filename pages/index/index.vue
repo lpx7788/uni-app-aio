@@ -35,7 +35,7 @@
 									<text v-if="item.isPresentIntegral==='1'" class="red-b">赠</text>
 									<text v-if="item.carefullyChosenSeller==='1'" class="green-b">精</text>
 								</view> 
-								<view class="contents uni-flex-item">
+							<view class="contents uni-flex-item">
 									<view class="top">
 										<text class="categoryName">{{item.categoryName}}</text>
 										<text class="attribute uni-ellipsis">
@@ -61,8 +61,8 @@
 										<text class="wareHouse uni-flex-item uni-ellipsis">{{item.wareHouse}}</text>
 										<text class="releaseStatus uni-flex-item" :class="[item.releaseStatus==='1'?'red':'gray']">{{item.releaseStatus==='1'?'在售中':'已售完'}}</text>
 									</view>
-								</view>
-							</view>
+								</view> 
+							</view> 
 							<uniLoadMore :status="loadMore[tabIndex]"></uniLoadMore>
 							<view class="none">
 								{{loadMoreText}}
@@ -94,7 +94,6 @@ export default {
 			interval: 2000,
 			duration: 500,
 			circular: true,
-			tabItems: ['自选','现货商城','求购大厅'],
 			current: 0,
 			swiperInfo: [],
 			products: [[],[],[]], //商品
