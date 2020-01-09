@@ -110,8 +110,7 @@ export default {
 			sortType: [0,0,0],
 		};
 	},
-	onLoad() {
-
+	onShow() {
 		this.getHotCategory()
 		this.getBannerDatas()
 		this.products.forEach((item,idx)=>{
