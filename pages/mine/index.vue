@@ -3,44 +3,44 @@
 	     <view class='section head-section' @click='loginBtn()'>
 	        <view class="head-section-content">
 	          <view class="head-section-content-top">
-	           <view class="userName" v-if="userList==''||JSON.stringify(userList)=='{}'" >
+	           <view class="userName" v-if="userData==={}" >
 	              <view> 未登录</view>
 	              <view class="tologin">
 	                立即登录，进行交易！
 	              </view>
 	            </view>
 	            <view class="userName" v-else>
-	             <view class="userName-top" v-if="userList!==''||JSON.stringify(userList)==!'{}'">
-	               <span class="userName-top-name">{{userList.userName?userList.userName:'未认证'}}</span>
+	             <view class="userName-top" v-if="userData.auths==={}">
+	               <span class="userName-top-name">{{userData.auths==={}?userData.userName:'未认证'}}</span>
 	                <text >
 						<i class="approve"  v-if="status==0" data-url="../identity/identity" catchtap="goto">去认证</i>
 						<i class="approve"  v-if="status==1">审核中</i>
 						<i class="approve"  v-if="status==2">证</i>
 					</text>
-	                <span class="userName-top-identity">{{auths.roleCodeExp}}</span>
+	                <span class="userName-top-identity">{{userData.auths.roleCodeExp}}</span>
 	              </view>
-	                 <view class="userName-bot"  v-if="auths.companyName&&status!=0" catchtap='changeCompany'>
-	                <span class="userName-top-company">{{auths.companyName}}</span>
-	                <image mode="widthFix"  v-if="auths.companyName&&status!=0" class='companyimg' src="https://aio.manytrader.net/preViewUploadFile/images/btn_switchcompany.png"></image>
+	                 <view class="userName-bot"  v-if="userData.auths.companyName&&status!=0" catchtap='changeCompany'>
+	                <span class="userName-top-company">{{userData.auths.companyName}}</span>
+	                <image mode="widthFix"  v-if="userData.auths.companyName&&status!=0" class='companyimg' src="https://aio.manytrader.net/preViewUploadFile/images/btn_switchcompany.png"></image>
 	              </view> 
 	             </view>
 	             <view class='avatar'>
-	              <image  v-if="userList==''||JSON.stringify(userList)=='{}'" src='https://aio.manytrader.net/preViewUploadFile/images/icon_default_headportrait@2x.png'></image>
+	              <image  v-if="userData.auths==={}" src='https://aio.manytrader.net/preViewUploadFile/images/icon_default_headportrait@2x.png'></image>
 	              <image  v-else src="https://aio.manytrader.net/preViewUploadFile/images/icon-mine-active.png"></image>
 	            </view>
 	          </view>
 	        </view>
 	       <view class='buyer'>
-	          <image  v-if="userList==''||JSON.stringify(userList)=='{}'&&userList.isBuyer==1" src='https://aio.manytrader.net/preViewUploadFile/images/list_icon_buyer@2x.png'></image>
+	          <image  v-if="userData.isBuyer==1" src='https://aio.manytrader.net/preViewUploadFile/images/list_icon_buyer@2x.png'></image>
 	        </view>
-	        <view class="head-section-content-down"  v-if="userList.userPhone">
+	        <view class="head-section-content-down"  v-if="userData.userPhone">
 	          <image class='phoneimg' src="https://aio.manytrader.net/preViewUploadFile/images/list_icon_phone@2x.png" mode='widthFix'></image>
-	          <text>{{userList.userPhone}}</text>
+	          <text>{{userData.userPhone}}</text>
 	        </view>
 	      </view>
 	      <!-- 选项 -->
 	      <view class=' options-section'>
-			  <view class='item '  @click="gotoDetail('integral/index')" data-web="xszy" v-if="userList!==''||JSON.stringify(userList)!=='{}'&&userList.isBuyer==1">
+			  <view class='item '  @click="gotoDetail('integral/index')" data-web="xszy" v-if="userData.isBuyer==1">
 			      <view class='left'>
 			        <image class='icon' src='https://aio.manytrader.net/preViewUploadFile/images/list_icon_integralmall@2x.png' mode='widthFix'></image>
 			        <text class='title'>积分商城</text>
@@ -80,11 +80,16 @@ export default {
 		return {
 			userList:'',
 			status:"",
-			auths:"",
+			userData: {},
 		};
 	},
 	onLoad() {
-		this.getUserInfo()
+		// this.getUserInfo()
+	},
+	onShow(){
+		let auths = uni.getStorageSync('userInfo')
+		this.userData = auths.user
+		console.log(this.userData)
 	},
 	methods: {
 		//跳转详情页面
@@ -122,16 +127,19 @@ export default {
 		   console.log('获取用户信息 ====')
 		  let self = this
 		   this.$uniRequest.httpClient(this.$api.user_refresh_url, {}).then(function(res) {
-			   console.log(res);
-			   self.userList = res.data.returnObject
-			   if(self.userList.user){
-				  if(self.userList.user.status){
-					  self.status = self.userList.user.status
-				  }
-				   if(self.userList.user.auths){
-						self.auths = self.userList.user.auths
-				   }
-			   }
+			   // console.log(res);
+			   //存儲信息
+			   uni.setStorageSync('userInfo', res.data.returnObject);
+			   uni.setStorageSync('access_token', res.data.returnObject.access_token);
+			   // self.userList = res.data.returnObject
+			   // if(self.userList.user){
+				  // if(self.userList.user.status){
+					 //  self.status = self.userList.user.status
+				  // }
+				  //  if(self.userList.user.auths){
+						// self.auths = self.userList.user.auths
+				  //  }
+			   // }
 		   }).catch(function(error) {
 		       // console.log(error);
 		   });

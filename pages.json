@@ -48,7 +48,8 @@
 		{
 			"path": "pages/mine/set/index",
 			"style": {
-				"navigationBarTitleText": "设置"
+				"navigationBarTitleText": "设置",
+				"enablePullDownRefresh": false
 			}
 		},
 		{
