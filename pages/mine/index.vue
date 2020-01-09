@@ -1,5 +1,5 @@
 <template>
-	<view class="minePage">
+	<view :class="darkMode?'darkMode minePage':'minePage'">
 	     <view class='section head-section' @click='loginBtn()'>
 	        <view class="head-section-content">
 	          <view class="head-section-content-top">
@@ -10,7 +10,7 @@
 	              </view>
 	            </view>
 	            <view class="userName" v-else>
-	             <view class="userName-top" v-if="userList!==''||JSON.stringify(userList)==!'{}'">
+	             <view class="userName-top" v-if="userList!==''||JSON.stringify(userList)!=='{}'">
 	               <span class="userName-top-name">{{userList.userName?userList.userName:'未认证'}}</span>
 	                <text >
 						<i class="approve"  v-if="status==0" data-url="../identity/identity" catchtap="goto">去认证</i>
@@ -68,7 +68,9 @@
 				  </view>
 				</view>
 		   </view>
+		   		<!-- <button type="primary" @click="changeColor()">改变导航颜色</button> -->
 		  </view>
+		  
 	</view>
 </template>
 <script>
@@ -81,23 +83,39 @@ export default {
 			userList:'',
 			status:"",
 			auths:"",
+			darkMode:false //暗盒模式
 		};
 	},
 	onLoad() {
+		// this.getUserInfo()
+	},
+	onShow(){
+	    this.switchTheTheme()
 		this.getUserInfo()
 	},
 	methods: {
+		//切换主题
+		switchTheTheme(){
+			this.darkMode = uni.getStorageSync('darkMode')?uni.getStorageSync('darkMode'):false
+			if(this.darkMode === true){
+				this.$theme.DarkModeTheme()
+			}else{
+				this.$theme.CommonPatternTheme()
+			}
+		},
 		//跳转详情页面
 		gotoDetail(url){
 			uni.navigateTo({
 			    url: url
 			});
 		},
-		
 		//跳转webview页面
 		gotoWebView(url){
+			// ?night='+ uni.getStorageSync('darkMode')===true?'1':''
+			let num = uni.getStorageSync('darkMode')===true?'1':''
+			
 			uni.navigateTo({
-		     	url:url + '?url='+ config.ApiUrl  + '/xszy/index.html'
+		     	url:url + '?url='+ config.H5Url  + '/newGuidelinesMenu_m?night=' + num
 			});	
 		},
 		
@@ -110,16 +128,6 @@ export default {
 			
        //获取用户信息
 	   getUserInfo(){
-		   
-		   // let datas = {"errorCode":"0000","errorMsg":"请求成功","returnObject":
-		   // {"access_token":"d9748d0e8abb496dac514df52a86b0aa_763d00032f204df0990354e582d55b56","user":{"qq":null,"unionid":null,"auths":
-		   // {"companyCode":"763d00032f204df0990354e582d55b56","userCompanyStatus":"2","companyIdentity":"3",
-		   // "userCompanyStatusExp":"已认证","autoHedgeSwitch":"1","companyName":"广州卓业科技有限公司","roleCode":"2",
-		   // "companyIdentityExp":"买家与卖家","roleCodeExp":"业务经理","signAutoHedgeProtocol":"1"},"userPhone":"13430319375","userIdentity":"441621199604046412",
-		   // "userName":"王老板","isBuyer":"1","allowPricing":"1","userCode":"d9748d0e8abb496dac514df52a86b0aa","userWechat":null,
-		   // "openNewsPopup":null,"availableIntegral":"20000","aboutToIntegral":"30000","businessDirection":"3","beenusedIntegral":"0","userEmail":null,"id":2640,"status":"2"}},
-		   // "type":null,"requestId":null}
-		   console.log('获取用户信息 ====')
 		  let self = this
 		   this.$uniRequest.httpClient(this.$api.user_refresh_url, {}).then(function(res) {
 			   console.log(res);
@@ -140,22 +148,35 @@ export default {
 };
 </script>
 
-<style lang="scss">
-page{
-	background: #EEEEEE;
+<style lang="scss" scoped>
+// 暗黑模式	
+.darkMode{
+	background:$darkMode-list-main-bg-color !important;
+	.head-section, .options-section{
+		background:$darkMode-list-bg-color !important;;
+		color:$darkMode-list-text-color !important;
+	}
+	.options-section {
+		.item{
+			border-color: $darkMode-list-border-color !important;
+		}
+	}
 }
+
+// 正常模式
 .minePage {
-	
+	background: #EEEEEE;
+	width: 100%;
+	height: 100%;
+	position: absolute;
 	 .head-section {
-	   padding: 20rpx ;
-	   background:#f6f6f6;
+	   margin: 20rpx ;
+	    background:#fff;
 	   .tologin{
 	     color: #999;
 	   }
-
-	 
 	  .head-section-content{
-	   background:#fff;
+	
 	   padding:40rpx 40rpx 0rpx 40rpx;
 	   
 	   .head-section-content-top{
@@ -239,7 +260,6 @@ page{
 	   width: 100%;
 	   display: flex;
 	   justify-content: flex-end;
-	   background: #fff;
 	   min-height: 60rpx;
 	   image{
 	     width: 120rpx;
@@ -274,7 +294,7 @@ page{
 		 text {
 		   margin-left: 20rpx;
 		   font-size: 32rpx;
-		   color: #222;
+		   
 		 }
 		 image {
 		   width: 36rpx;

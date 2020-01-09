@@ -58,7 +58,9 @@
 </script>
 
 <style>
+
 	/*每个页面公共css */
     @import "./common/uni.css";
     @import "./common/base.css";
+
 </style>

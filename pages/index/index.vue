@@ -1,5 +1,5 @@
 <template>
-	<view class="indexPage products">
+	<view :class="darkMode?'darkMode indexPage products':'indexPage products'">
 		<view class="text-area swiperWrap">
 			 <swiper class="swiper" style="width: 100%;" :indicator-dots="indicatorDots" :circular="circular" :autoplay="autoplay"  :interval="interval" :duration="duration">
 				<swiper-item v-for="(item, index) in swiperInfo" :key="index" >
@@ -131,8 +131,19 @@ export default {
 			}
 		})
 	},
+	onShow(){
+		this.switchTheTheme()
+	},
 	methods: {
-
+	    //切换主题
+		switchTheTheme(){
+			this.darkMode = uni.getStorageSync('darkMode')?uni.getStorageSync('darkMode'):false
+			if(this.darkMode === true){
+				this.$theme.DarkModeTheme()
+			}else{
+				this.$theme.CommonPatternTheme()
+			}
+		},
 		// 选择热门品种
 		changeHotCategory(item){
 			
@@ -268,6 +279,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	// 暗黑模式
+	.darkMode{
+		background:$darkMode-list-main-bg-color !important;
+		.products-item,.hotCategory,.navTabBox{
+			background:$darkMode-list-bg-color !important;;
+			color:$darkMode-list-text-color !important;
+		}
+	}
 .indexPage {
 	display: flex;
 	flex-direction: column;
