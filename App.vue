@@ -58,7 +58,9 @@
 </script>
 
 <style>
-
+	 /* page{
+		   background: #000000;
+	   } */
 	/*每个页面公共css */
     @import "./common/uni.css";
     @import "./common/base.css";

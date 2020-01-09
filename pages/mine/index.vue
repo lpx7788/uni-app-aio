@@ -165,7 +165,7 @@ export default {
 
 // 正常模式
 .minePage {
-	background: #EEEEEE;
+	background: #c00;
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -226,7 +226,7 @@ export default {
 			image {
 			  width: 120rpx;
 			  height: 120rpx;
-			  border-radius: 50%;
+			 
 			  margin-top: -10rpx;
 			  display: flex;
 			  padding-left: 30rpx;

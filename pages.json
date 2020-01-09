@@ -30,8 +30,7 @@
 		{
 			"path": "pages/mine/index",
 			"style": {
-				"navigationBarTitleText": "我的",
-				"navigationBarBackgroundColor":"#FFFFFF"
+				"navigationBarTitleText": "我的"
 			}
 		},
 		{
@@ -49,7 +48,9 @@
 		{
 			"path": "pages/mine/set/index",
 			"style": {
-				"navigationBarTitleText": "设置"
+				"navigationBarTitleText": "设置",
+				"enablePullDownRefresh": false
+				
 			}
 		},
 		{
@@ -72,6 +73,10 @@
 		"selectedColor" : "#2a4c7e",
 		"borderStyle" : "black",
 		"backgroundColor" : "#fff",
+		// "app-plus": {  
+		//       "background":"#000000"
+		//   },
+		
 		"list" : [
 			{
 				"pagePath" : "pages/index/index",
