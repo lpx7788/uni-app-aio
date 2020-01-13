@@ -25,7 +25,7 @@
 						</view>
 					</view>
 					<view class='avatar'>
-						<image v-if="userData.auths==={}" src='https://aio.manytrader.net/preViewUploadFile/images/icon_default_headportrait@2x.png'></image>
+						<image v-if="userData.auths" src='https://aio.manytrader.net/preViewUploadFile/images/icon_default_headportrait@2x.png'></image>
 						<image v-else src="https://aio.manytrader.net/preViewUploadFile/images/icon-mine-active.png"></image>
 					</view>
 				</view>

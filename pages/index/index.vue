@@ -8,19 +8,21 @@
 					</view>
 				</swiper-item>
 			</swiper>
-			<view class="stickyBox">				
+			<view class="stickyBox">	
 				<navTab ref="navTab" class="navTab" :tabTitle="tabTitle" @changeTab='changeTab' ></navTab>
-				<view class="hotCategory uni-flex">
+				<view class="hotCategory uni-flex" v-show="currentTab===0&&userData.userName||currentTab!==0">
 					<view class="title">
 						热门品种：
 					</view>
 					<view class="categoryNames">
 						<scroll-view :scroll-x="true">
-							<text :class="[item.categoryCode===filterParams.categoryCode?'categoryActived':'']" v-for="(item,idx) in hotCategoryNames" :key="idx" @click="changeHotCategory(item)" v-if="idx!==0">{{item.categoryName}}</text>
+							<text v-for="(item,idx) in hotCategoryNames" :key="idx" @click="changeHotCategory(item)" v-if="idx!==0">
+								<text :class="[item.categoryCode===filterParams.categoryCode[currentTab]?'categoryActived':'']">{{item.categoryName}}</text>
+							</text>
 						</scroll-view>
 					</view>
 				</view>
-				<navTab ref="navTab_filter" class="navTab" :tabTitle="tabTitle_filter" @changeTab='changeTab_filter' :showUnderline="false"></navTab>
+				<navTab ref="navTab_filter" v-show="currentTab===0&&userData.userName||currentTab!==0" class="navTab" :tabTitle="tabTitle_filter" @changeTab='changeTab_filter' :showUnderline="false"></navTab>
 			</view>
 			<swiper style="min-height: 100vh;" :current="currentTab" @change="swiperTab">
 				<swiper-item v-for="(tabItem,tabIndex) in tabTitle" :key="tabIndex">
@@ -115,7 +117,15 @@ export default {
 			sortType: [0,0,0],
 			userData: {},
 			filterParams: {
-				categoryCode: '',
+				categoryCode: ['','',''],
+				releaseStatus: [["1", "2"],["1", "2"],["1", "2"]],
+				materialList: [[],[],[]],
+				brandList: [[],[],[]],
+				specList: [[],[],[]],
+				wareHouseList: [[],[],[]],
+				areaCode: ['','',''],
+				locationJson: {cip: "120.197.17.187", cid: "440000", cname: "广东省"},
+				categoryType: ['','','']
 			},
 		};
 	},
@@ -152,9 +162,19 @@ export default {
 				this.$theme.CommonPatternTheme()
 			}
 		},
-		// 选择热门品种
+		// 选择热门品种 
 		changeHotCategory(item){
-			this.filterParams.categoryCode = this.filterParams.categoryCode === item.categoryCode?'':item.categoryCode
+			let filterParams = this.filterParams
+			filterParams.categoryCode[this.currentTab] = filterParams.categoryCode[this.currentTab] === item.categoryCode?'':item.categoryCode
+			this.filterParams = filterParams
+			// ***** 刷新热门品种渲染 ****** start
+			let tab = this.currentTab
+			this.currentTab = ''
+			this.currentTab = tab
+			// ***** 刷新热门品种渲染 ****** end
+			this.pages[this.currentTab] = 1
+			this.products[this.currentTab] = []
+			this.getProducts(this.currentTab)
 		},
 		// 获取热门品种
 		getHotCategory(){
@@ -207,20 +227,20 @@ export default {
 			// console.log(http.httpClientPost)
 			this.$uniRequest.httpClient(this.$api[url],{
 				deliveryType: idx,
-				// categoryCode: "",
-				// searchKeyword: "",
-				// source: "1",
+				categoryCode: this.filterParams.categoryCode[this.currentTab],
+				searchKeyword: "",
+				source: "1",
 				pageNum: this.pages[idx],
 				pageSize: "20",
-				// releaseStatus: ["1", "2"],
 				sortType: sortType,
+				// releaseStatus: ["1","2"],
 				// materialList: [],
 				// brandList: [],
 				// specList: [],
 				// wareHouseList: [],
-				// areaCode: "",
-				// locationJson: {cip: "120.197.17.187", cid: "440000", cname: "广东省"},
-				// categoryType: ""
+				areaCode: "",
+				locationJson: {cip: "120.197.17.187", cid: "440000", cname: "广东省"},
+				categoryType: ""
 			}).then((res)=>{
 				uni.stopPullDownRefresh() //停止下拉刷新
 				this.products[idx] = this.products[idx].concat(res.data.returnObject.products)
@@ -243,12 +263,13 @@ export default {
 		},
 		swiperTab: function(e) {
 			let index = e.detail.current //获取索引
-			this.$refs.navTab_filter.longClick(this.sortType[index],true)
-			this.$refs.navTab.longClick(index,true)
+			this.currentTab = index
+			if(this.$refs.navTab_filter)this.$refs.navTab_filter.longClick(this.sortType[index],true)
+			if(this.$refs.navTab)this.$refs.navTab.longClick(index,true)
 		},
 		changeTab(index){
 			this.currentTab = index
-			this.$refs.navTab_filter.longClick(this.sortType[index],true)
+			if(this.$refs.navTab_filter)this.$refs.navTab_filter.longClick(this.sortType[index],true)
 		},
 		scrolltolower(){
 			if(this.loadMore[this.currentTab] === 'noMore') return
@@ -332,7 +353,7 @@ export default {
 				width: 75vw;
 				white-space: nowrap;
 				text{
-					padding: 0 20rpx;
+					padding: 0 15rpx;
 				}
 			}
 		}
