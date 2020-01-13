@@ -16,7 +16,7 @@
 					</view>
 					<view class="categoryNames">
 						<scroll-view :scroll-x="true">
-							<text v-for="(item,idx) in hotCategoryNames" :key="idx" @click="changeHotCategory(item)">{{item.categoryName}}</text>
+							<text :class="[item.categoryCode===filterParams.categoryCode?'categoryActived':'']" v-for="(item,idx) in hotCategoryNames" :key="idx" @click="changeHotCategory(item)" v-if="idx!==0">{{item.categoryName}}</text>
 						</scroll-view>
 					</view>
 				</view>
@@ -25,7 +25,11 @@
 			<swiper style="min-height: 100vh;" :current="currentTab" @change="swiperTab">
 				<swiper-item v-for="(tabItem,tabIndex) in tabTitle" :key="tabIndex">
 					<scroll-view style="height: 100%;" :scroll-y="scrollY" scroll-with-animation @scrolltolower="scrolltolower">
-						<view class="" >
+						<view class="notLogin center" v-if="tabIndex===0&&!userData.userName">
+							<text class="notLogin_title">此功能需要登录</text>
+							<button type="primary">登录</button>
+						</view>
+						<view class="" v-else>
 							<view v-for="(item,index) in products[tabIndex]" :key="index" class="products-item uni-flex">
 								<view class="icons uni-flex uni-column">
 									<text v-if="item.deliveryType==='1'" class="blue-b">售</text>
@@ -89,6 +93,7 @@ export default {
 	},
 	data() {
 		return {
+			darkMode: false,
 		    indicatorDots: false,
 			autoplay: true,
 			interval: 2000,
@@ -108,12 +113,19 @@ export default {
 			scrollY: false,
 			loadMoreText: '上拉',
 			sortType: [0,0,0],
+			userData: {},
+			filterParams: {
+				categoryCode: '',
+			},
 		};
 	},
 	onShow() {
+		let userData = uni.getStorageSync('userInfo')
+		if(userData) this.userData = userData
 		this.getHotCategory()
 		this.getBannerDatas()
 		this.products.forEach((item,idx)=>{
+			if(idx===0&&!userData.userName) return
 			this.getProducts(idx)
 		})
 		uni.$on('socket_md_cb',(data)=>{
@@ -130,9 +142,6 @@ export default {
 			}
 		})
 	},
-	onShow(){
-		this.switchTheTheme()
-	},
 	methods: {
 	    //切换主题
 		switchTheTheme(){
@@ -145,7 +154,7 @@ export default {
 		},
 		// 选择热门品种
 		changeHotCategory(item){
-			
+			this.filterParams.categoryCode = this.filterParams.categoryCode === item.categoryCode?'':item.categoryCode
 		},
 		// 获取热门品种
 		getHotCategory(){
@@ -286,41 +295,33 @@ export default {
 			color:$darkMode-list-text-color !important;
 		}
 	}
-.indexPage {
-	display: flex;
-	flex-direction: column;
-	align-tabItems: center;
-	justify-content: center;
-	.swiperWrap {
-		width: 100%;
-		height: 100%;
+	.indexPage {
+		display: flex;
+		flex-direction: column;
+		align-tabItems: center;
+		justify-content: center;
+		.swiperWrap {
+			width: 100%;
+			height: 100%;
+		}
+			
+		.swiper-item{
+			width: 100%;
+			height: 100%;
+		}
+		.swiper-img{
+			width: 100%;
+			height: 100%;
+		}
+	 
 	}
+	.products{
 		
-	.swiper-item{
-		width: 100%;
-		height: 100%;
-	}
-	.swiper-img{
-		width: 100%;
-		height: 100%;
-	}
- 
-}
-.products{
-		
-		.navTab::after{ //下边框
-			position: absolute;
-			box-sizing: border-box;
-			content: ' ';
-			pointer-events: none;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			border-bottom: 1px solid #ebedf0;
-			-webkit-transform: scaleY(0.5);
-			transform: scaleY(0.5);
+		.categoryActived{
+			color: rgb(78, 103, 253);
 		}
 		.hotCategory{
+			position: relative;
 			background-color: #fff;
 			padding: 20rpx 0;
 			.title{
@@ -331,7 +332,7 @@ export default {
 				width: 75vw;
 				white-space: nowrap;
 				text{
-					padding: 0 10rpx;
+					padding: 0 20rpx;
 				}
 			}
 		}
@@ -401,6 +402,15 @@ export default {
 					padding-left: 13rpx;
 					border-left: 1rpx solid #e4e4e4;
 				}
+			}
+		}
+		.notLogin{
+			margin-top: 30vh;
+			.notLogin_title{
+				margin: 20rpx 0;
+			}
+			uni-button{
+				width: 60vw;
 			}
 		}
 		.stickyBox{

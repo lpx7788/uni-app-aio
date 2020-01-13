@@ -87,6 +87,7 @@
 
 <style lang="scss">
 	.navTabBox {
+		position: relative;
 		width: 100vw;
 		color: #222;
 		background-color: #fff;
@@ -107,7 +108,7 @@
 				transition: .5s;
 				.underline {
 					width: 50%;
-					height: 4px;
+					height: 2px;
 					background-color: white;
 				}
 			}
@@ -140,5 +141,17 @@
 				}
 			}
 		}
+	}
+	.navTabBox::after{ //下边框
+		position: absolute;
+		box-sizing: border-box;
+		content: ' ';
+		pointer-events: none;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		border-bottom: 1px solid #ebedf0;
+		-webkit-transform: scaleY(0.5);
+		transform: scaleY(0.5);
 	}
 </style>

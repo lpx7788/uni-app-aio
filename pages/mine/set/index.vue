@@ -50,8 +50,7 @@
 				            uni.showLoading({
 				                title: '退出成功'
 				            });
-							uni.setStorageSync('userInfo', {});
-							uni.setStorageSync('access_token', '');
+							uni.clearStorage();
 							uni.switchTab({
 							      url: '/pages/mine/index',
 							});

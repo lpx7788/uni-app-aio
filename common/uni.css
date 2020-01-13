@@ -25,6 +25,9 @@ form {
 .none{
 	display: none;
 }
+.center{
+	text-align: center;
+}
 .uni-flex {
 	display: flex;
 	flex-direction: row;
