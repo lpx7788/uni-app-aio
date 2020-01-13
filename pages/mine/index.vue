@@ -83,7 +83,7 @@ export default {
 			userList:'',
 			status:"",
 			auths:"",
-			darkMode:false //暗盒模式
+			darkMode:false, //暗盒模式
 			userData: {},
 
 		};
