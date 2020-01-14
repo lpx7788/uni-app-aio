@@ -58,7 +58,15 @@
 				"navigationBarTitleText": "积分商城"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/search/index",
+            "style" : {
+				"app-plus": {
+					"titleNView": false //禁用原生导航栏  
+				}
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "聚点商城",

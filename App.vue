@@ -44,6 +44,10 @@
 				})
 			},
 		},
+		mounted(){
+			// const el = uni.createSelectorQuery()
+			// console.log(el)  
+		},
 		onLaunch: function() {
 			console.log('App Launch')
 		},
@@ -58,11 +62,10 @@
 </script>
 
 <style>
-	 /* page{
-		   background: #000000;
-	   } */
 	/*每个页面公共css */
     @import "./common/uni.css";
     @import "./common/base.css";
-
+	page{
+		background-color: #292929;
+	}
 </style>

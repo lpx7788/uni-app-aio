@@ -1,6 +1,10 @@
 <template>
-	<view :class="darkMode?'darkMode indexPage products':'indexPage products'">
+	<!-- <view :class="darkMode?'darkMode indexPage products':'indexPage products'"> -->
+	<view class="indexPage products">
 		<view class="text-area swiperWrap">
+			<view class="searchBox" @click="goToSearch">
+				<uniSearchBar placeholder="输入商品、仓库等关键字搜索"></uniSearchBar>
+			</view>
 			 <swiper class="swiper" style="width: 100%;" :indicator-dots="indicatorDots" :circular="circular" :autoplay="autoplay"  :interval="interval" :duration="duration">
 				<swiper-item v-for="(item, index) in swiperInfo" :key="index" >
 					<view class="swiper-item" :style="'background: url('+ item.coverPicUrl + ') center center / cover no-repeat'" >
@@ -82,7 +86,7 @@
 </template>
 
 <script>
-import { uniSegmentedControl,uniLoadMore } from '@dcloudio/uni-ui';
+import { uniSegmentedControl,uniLoadMore,uniSearchBar } from '@dcloudio/uni-ui';
 import uniq from "lodash/uniq";
 import navTab from '../../components/navTab.vue'
 
@@ -91,6 +95,7 @@ export default {
 	components: {
 		uniSegmentedControl,
 		uniLoadMore,
+		uniSearchBar,
 		navTab
 	},
 	data() {
@@ -101,7 +106,7 @@ export default {
 			interval: 2000,
 			duration: 500,
 			circular: true,
-			current: 0,
+			// current: 0,
 			swiperInfo: [],
 			products: [[],[],[]], //商品
 			contractCodes: [], //页面所有合约
@@ -192,6 +197,7 @@ export default {
 			this.loadMore[idx] = 'more'
 			this.products[idx] = []
 		},
+		// 切换排序规则
 		changeTab_filter(e){
 			this.sortType[this.currentTab] = e
 			this.reset(this.currentTab)
@@ -212,12 +218,13 @@ export default {
 			    // console.log(error);
 			});
 		},
-		//tab点击切换
-		onClickTabItem(e) {
-			if (this.current !== e.currentIndex) {
-				this.current = e.currentIndex;
-			}
-		},
+		// //tab点击切换
+		// onClickTabItem(e) {
+		// 	if (this.current !== e.currentIndex) {
+		// 		this.current = e.currentIndex;
+		// 	}
+		// },
+		// 查询商品
 		getProducts(idx){
 			this.loadMoreText = '加载'
 			this.loadMore[idx] = 'loading'
@@ -261,19 +268,28 @@ export default {
 			    // console.log(error);
 			});
 		},
+		// 滑动切换商品
 		swiperTab: function(e) {
 			let index = e.detail.current //获取索引
 			this.currentTab = index
 			if(this.$refs.navTab_filter)this.$refs.navTab_filter.longClick(this.sortType[index],true)
 			if(this.$refs.navTab)this.$refs.navTab.longClick(index,true)
 		},
+		// 点击tab切换商品
 		changeTab(index){
 			this.currentTab = index
 			if(this.$refs.navTab_filter)this.$refs.navTab_filter.longClick(this.sortType[index],true)
 		},
+		// 滑到底部加载更多
 		scrolltolower(){
 			if(this.loadMore[this.currentTab] === 'noMore') return
 			this.getProducts(this.currentTab)
+		},
+		// 跳转搜索页面
+		goToSearch(){
+			uni.navigateTo({
+			    url: '/pages/search/index?type=' + this.currentTab
+			});
 		}
 	},
 	
