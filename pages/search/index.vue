@@ -1,6 +1,7 @@
 <template>
 	<view>
 		<uniSearchBar cancelButton="always" placeholder="搜索商品" @confirm="searchProducts" @cancel="goBack"></uniSearchBar>
+		
 	</view>
 </template>
 
@@ -16,6 +17,8 @@
 				type: null,
 				searchKey: '',
 				products: [],
+				page: 1,
+				loadMore: 'more'
 			}
 		},
 		methods: {

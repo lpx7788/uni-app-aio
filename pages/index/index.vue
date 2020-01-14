@@ -3,7 +3,7 @@
 	<view class="indexPage products">
 		<view class="text-area swiperWrap">
 			<view class="searchBox" @click="goToSearch">
-				<uniSearchBar placeholder="输入商品、仓库等关键字搜索"></uniSearchBar>
+				<uniSearchBar placeholder="输入商品、仓库等关键字搜索" cancelButton="none"></uniSearchBar>
 			</view>
 			 <swiper class="swiper" style="width: 100%;" :indicator-dots="indicatorDots" :circular="circular" :autoplay="autoplay"  :interval="interval" :duration="duration">
 				<swiper-item v-for="(item, index) in swiperInfo" :key="index" >
